@@ -22,4 +22,9 @@ public class DataSourceController {
         dataSourceContextHolderService.set(simpleDataSourceInfo);
         return simpleDataSourceInfo;
     }
+
+    @PostMapping("default")
+    public void save() {
+        dataSourceContextHolderService.switchToDefault();
+    }
 }

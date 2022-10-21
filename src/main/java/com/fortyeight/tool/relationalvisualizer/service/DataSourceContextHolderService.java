@@ -17,4 +17,8 @@ public class DataSourceContextHolderService {
         simpleDataSourceInfoValidator.validate(simpleDataSourceInfo);
         dataSourceContextHolder.set(simpleDataSourceInfo);
     }
+
+    public void switchToDefault() {
+        dataSourceContextHolder.switchToDefault();
+    }
 }

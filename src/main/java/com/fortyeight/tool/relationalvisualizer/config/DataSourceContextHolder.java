@@ -15,15 +15,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DataSourceContextHolder {
     private final DataSourceUrlFormatter dataSourceUrlFormatter;
-    public static final String DEFAULT_DATA_SOURCE_BEAN_NAME_CONTEXT = "defaultEmbeddedDataSource";
+    public static final String DEFAULT_DATA_SOURCE_NAME = "defaultEmbeddedDataSource";
 
-    private String currentDataSourceBeanNameContext;
+    private String currentDataSourceName;
     @Setter
     private Map<Object, DataSource> resolvedDataSources;
 
     @PostConstruct
     private void init() {
-        currentDataSourceBeanNameContext = DEFAULT_DATA_SOURCE_BEAN_NAME_CONTEXT;
+        switchToDefault();
     }
 
     public void set(SimpleDataSourceInfo info) {
@@ -35,10 +35,14 @@ public class DataSourceContextHolder {
                 .build();
         String dataSourceName = info.getDataSourceName();
         resolvedDataSources.put(dataSourceName, dataSource);
-        currentDataSourceBeanNameContext = dataSourceName;
+        currentDataSourceName = dataSourceName;
     }
 
     public Object getCurrentDataSourceBeanName() {
-        return currentDataSourceBeanNameContext;
+        return currentDataSourceName;
+    }
+
+    public void switchToDefault() {
+        currentDataSourceName = DEFAULT_DATA_SOURCE_NAME;
     }
 }
