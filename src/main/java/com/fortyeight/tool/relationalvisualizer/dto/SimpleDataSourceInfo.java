@@ -2,9 +2,10 @@ package com.fortyeight.tool.relationalvisualizer.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class SimpleDataSourceInfo {
     private String dataSourceName;
 
