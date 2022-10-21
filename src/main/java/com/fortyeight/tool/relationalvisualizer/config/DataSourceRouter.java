@@ -15,7 +15,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 
     public DataSourceRouter(DataSourceContextHolder dataSourceContextHolder,
                             ResolvedDataSourcesExtractorService resolvedDataSourcesExtractorService,
-                            @Qualifier("bootstrapDataSourceMap")
+                            @Qualifier("defaultDataSourceMap")
                             Map<Object, Object> defaultDataSourceMap) {
         this.dataSourceContextHolder = dataSourceContextHolder;
         this.resolvedDataSourcesExtractorService = resolvedDataSourcesExtractorService;

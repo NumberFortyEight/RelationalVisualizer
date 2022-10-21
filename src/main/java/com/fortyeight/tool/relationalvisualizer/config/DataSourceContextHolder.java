@@ -8,7 +8,6 @@ import com.fortyeight.tool.relationalvisualizer.service.dataSourceRouting.DataSo
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +22,7 @@ public class DataSourceContextHolder {
     private final ApplicationContext context;
     private final DataSourceExtractor dataSourceExtractor;
     private final DataSourceUrlFormatter dataSourceUrlFormatter;
-
-    @Value("${bootstrap.datasource}")
-    public String DEFAULT_DATA_SOURCE_NAME;
+    public static final String DEFAULT_DATA_SOURCE_NAME = "defaultDataSourceName";
 
     private String currentDataSourceName;
     @Setter
