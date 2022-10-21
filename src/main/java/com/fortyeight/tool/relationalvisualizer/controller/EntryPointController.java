@@ -22,4 +22,9 @@ public class EntryPointController {
     private List<Entry> getByTable(@PathVariable String table) {
         return entryPointService.getByTable(table);
     }
+
+    @GetMapping("{table}/{id}")
+    private List<Entry> getByTableAndId(@PathVariable String table, @PathVariable String id) {
+        return entryPointService.getByTableAndId(table, id);
+    }
 }

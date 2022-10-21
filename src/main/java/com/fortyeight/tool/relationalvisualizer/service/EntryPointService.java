@@ -18,4 +18,9 @@ public class EntryPointService {
     public List<Entry> getByTable(String table) {
         return template.query("select * from " + table, new EntryRowMapper(table, metaDataService));
     }
+
+    public List<Entry> getByTableAndId(String table, String id) {
+        String idColumnName = metaDataService.getIdColumnName(table);
+        return template.query("select * from %s where %s = '%s'".formatted(table, idColumnName, id), new EntryRowMapper(table, metaDataService));
+    }
 }
