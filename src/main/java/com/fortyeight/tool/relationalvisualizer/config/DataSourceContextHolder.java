@@ -7,6 +7,7 @@ import com.fortyeight.tool.relationalvisualizer.service.MetaDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class DataSourceContextHolder {
+    private final ApplicationContext context;
     private final DataSourceUrlFormatter dataSourceUrlFormatter;
     public static final String DEFAULT_DATA_SOURCE_NAME = "defaultEmbeddedDataSource";
 
@@ -39,19 +41,20 @@ public class DataSourceContextHolder {
         validateDataSourceName(dataSourceName, resolvedDataSources);
         resolvedDataSources.put(dataSourceName, dataSource);
         currentDataSourceName = dataSourceName;
-        //checkDataSource(info, url, resolvedDataSources);
+        checkDataSource(info, url, resolvedDataSources);
     }
 
-    /*private void checkDataSource(SimpleDataSourceInfo info,
+    private void checkDataSource(SimpleDataSourceInfo info,
                                  String url,
                                  Map<Object, DataSource> resolvedDataSources) {
         try {
-            //metaDataService.getTableNames();
+            context.getBean(MetaDataService.class).getTableNames();
         } catch(Exception e) {
             resolvedDataSources.remove(info.getDataSourceName());
-            throw new DataSourceInfoException("Cannot connect to: \"%s\" with info - %s".formatted(url, info));
+            switchToDefault();
+            throw new DataSourceInfoException("Cannot connect to: \"%s\" with info - %s. Message - %s".formatted(url, info, e.getMessage()));
         }
-    }*/
+    }
 
     private void validateDataSourceName(String dataSourceName, Map<Object, DataSource> resolvedDataSources) {
         if (resolvedDataSources.get(dataSourceName) != null)
