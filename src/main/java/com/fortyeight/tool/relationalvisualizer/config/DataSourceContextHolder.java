@@ -2,10 +2,12 @@ package com.fortyeight.tool.relationalvisualizer.config;
 
 import com.fortyeight.tool.relationalvisualizer.advice.exception.DataSourceInfoException;
 import com.fortyeight.tool.relationalvisualizer.dto.SimpleDataSourceInfo;
+import com.fortyeight.tool.relationalvisualizer.service.DataSourceExtractor;
 import com.fortyeight.tool.relationalvisualizer.service.MetaDataService;
 import com.fortyeight.tool.relationalvisualizer.service.dataSourceRouting.DataSourceUrlFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DataSourceContextHolder {
     private final ApplicationContext context;
+    private final DataSourceExtractor dataSourceExtractor;
     private final DataSourceUrlFormatter dataSourceUrlFormatter;
-    public static final String DEFAULT_DATA_SOURCE_NAME = "defaultEmbeddedDataSource";
+
+    @Value("${bootstrap.datasource}")
+    public String DEFAULT_DATA_SOURCE_NAME;
 
     private String currentDataSourceName;
     @Setter
@@ -33,11 +38,8 @@ public class DataSourceContextHolder {
 
     public void set(SimpleDataSourceInfo info) {
         String url = dataSourceUrlFormatter.formatDataSourceUrl(info);
-        DataSource dataSource = DataSourceBuilder.create()
-                .username(info.getUser())
-                .password(info.getPassword())
-                .url(url)
-                .build();
+        DataSource dataSource = dataSourceExtractor.getDataSource(info, url);
+
         String dataSourceName = info.getDataSourceName();
         validateDataSourceName(dataSourceName, resolvedDataSources);
         resolvedDataSources.put(dataSourceName, dataSource);

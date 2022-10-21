@@ -13,7 +13,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ResolvedDataSourceExtractorService {
+public class ResolvedDataSourcesExtractorService {
     @NonNull
     @SuppressWarnings("unchecked")
     public Map<Object, DataSource> getResolvedDataSources(DataSourceRouter dataSourceRouter) {

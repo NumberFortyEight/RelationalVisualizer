@@ -1,6 +1,6 @@
 package com.fortyeight.tool.relationalvisualizer.config;
 
-import com.fortyeight.tool.relationalvisualizer.service.dataSourceRouting.ResolvedDataSourceExtractorService;
+import com.fortyeight.tool.relationalvisualizer.service.dataSourceRouting.ResolvedDataSourcesExtractorService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
@@ -11,14 +11,14 @@ import java.util.Map;
 @Component
 public class DataSourceRouter extends AbstractRoutingDataSource {
     private final DataSourceContextHolder dataSourceContextHolder;
-    private final ResolvedDataSourceExtractorService resolvedDataSourceExtractorService;
+    private final ResolvedDataSourcesExtractorService resolvedDataSourcesExtractorService;
 
     public DataSourceRouter(DataSourceContextHolder dataSourceContextHolder,
-                            ResolvedDataSourceExtractorService resolvedDataSourceExtractorService,
-                            @Qualifier("defaultEmbeddedDataSourceMap")
+                            ResolvedDataSourcesExtractorService resolvedDataSourcesExtractorService,
+                            @Qualifier("bootstrapDataSourceMap")
                             Map<Object, Object> defaultDataSourceMap) {
         this.dataSourceContextHolder = dataSourceContextHolder;
-        this.resolvedDataSourceExtractorService = resolvedDataSourceExtractorService;
+        this.resolvedDataSourcesExtractorService = resolvedDataSourcesExtractorService;
         super.setTargetDataSources(defaultDataSourceMap);
     }
 
@@ -26,7 +26,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     public void afterPropertiesSet() {
         super.afterPropertiesSet();
         Map<Object, DataSource> resolvedDataSources =
-                resolvedDataSourceExtractorService.getResolvedDataSources(this);
+                resolvedDataSourcesExtractorService.getResolvedDataSources(this);
         dataSourceContextHolder.setResolvedDataSources(resolvedDataSources);
     }
 

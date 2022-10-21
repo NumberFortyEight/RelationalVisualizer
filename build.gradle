@@ -26,6 +26,7 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'com.h2database:h2:2.1.214'
@@ -37,4 +38,7 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+tasks.named('compileJava') {
+    inputs.files(tasks.named('processResources'))
 }
