@@ -2,7 +2,7 @@ package com.fortyeight.tool.relationalvisualizer.config;
 
 import com.fortyeight.tool.relationalvisualizer.advice.exception.DataSourceInfoException;
 import com.fortyeight.tool.relationalvisualizer.dto.SimpleDataSourceInfo;
-import com.fortyeight.tool.relationalvisualizer.service.DataSourceUrlFormatter;
+import com.fortyeight.tool.relationalvisualizer.service.dataSourceRouting.DataSourceUrlFormatter;
 import com.fortyeight.tool.relationalvisualizer.service.MetaDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

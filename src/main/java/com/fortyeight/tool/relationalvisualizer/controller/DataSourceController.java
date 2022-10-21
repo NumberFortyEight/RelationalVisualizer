@@ -1,7 +1,7 @@
 package com.fortyeight.tool.relationalvisualizer.controller;
 
 import com.fortyeight.tool.relationalvisualizer.dto.SimpleDataSourceInfo;
-import com.fortyeight.tool.relationalvisualizer.service.DataSourceContextHolderService;
+import com.fortyeight.tool.relationalvisualizer.service.dataSourceRouting.DataSourceContextHolderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
 package com.fortyeight.tool.relationalvisualizer.config;
 
-import com.fortyeight.tool.relationalvisualizer.service.ResolvedDataSourceExtractorService;
+import com.fortyeight.tool.relationalvisualizer.service.dataSourceRouting.ResolvedDataSourceExtractorService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;

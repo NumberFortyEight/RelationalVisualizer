@@ -1,4 +1,4 @@
-package com.fortyeight.tool.relationalvisualizer.service;
+package com.fortyeight.tool.relationalvisualizer.service.dataSourceRouting;
 
 import com.fortyeight.tool.relationalvisualizer.config.DataSourceContextHolder;
 import com.fortyeight.tool.relationalvisualizer.dto.SimpleDataSourceInfo;
