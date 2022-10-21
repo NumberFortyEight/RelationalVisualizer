@@ -22,11 +22,16 @@ dependencies {
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'com.h2database:h2:2.1.214'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.4'
 
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
+
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'com.h2database:h2:2.1.214'
+    implementation 'com.mysql:mysql-connector-j:8.0.31'
+
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
