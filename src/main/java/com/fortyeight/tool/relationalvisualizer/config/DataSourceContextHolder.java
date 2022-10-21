@@ -1,7 +1,9 @@
 package com.fortyeight.tool.relationalvisualizer.config;
 
+import com.fortyeight.tool.relationalvisualizer.advice.exception.DataSourceInfoException;
 import com.fortyeight.tool.relationalvisualizer.dto.SimpleDataSourceInfo;
 import com.fortyeight.tool.relationalvisualizer.service.DataSourceUrlFormatter;
+import com.fortyeight.tool.relationalvisualizer.service.MetaDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -34,8 +36,26 @@ public class DataSourceContextHolder {
                 .url(url)
                 .build();
         String dataSourceName = info.getDataSourceName();
+        validateDataSourceName(dataSourceName, resolvedDataSources);
         resolvedDataSources.put(dataSourceName, dataSource);
         currentDataSourceName = dataSourceName;
+        //checkDataSource(info, url, resolvedDataSources);
+    }
+
+    /*private void checkDataSource(SimpleDataSourceInfo info,
+                                 String url,
+                                 Map<Object, DataSource> resolvedDataSources) {
+        try {
+            //metaDataService.getTableNames();
+        } catch(Exception e) {
+            resolvedDataSources.remove(info.getDataSourceName());
+            throw new DataSourceInfoException("Cannot connect to: \"%s\" with info - %s".formatted(url, info));
+        }
+    }*/
+
+    private void validateDataSourceName(String dataSourceName, Map<Object, DataSource> resolvedDataSources) {
+        if (resolvedDataSources.get(dataSourceName) != null)
+            throw new DataSourceInfoException("DataSourceName \"%s\" always exist".formatted(dataSourceName));
     }
 
     public Object getCurrentDataSourceBeanName() {
