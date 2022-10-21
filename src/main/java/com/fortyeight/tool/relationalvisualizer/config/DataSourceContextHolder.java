@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -27,7 +28,7 @@ public class DataSourceContextHolder {
 
     @PostConstruct
     private void init() {
-        switchToDefault();
+        switchTo(DEFAULT_DATA_SOURCE_NAME);
     }
 
     public void set(SimpleDataSourceInfo info) {
@@ -51,7 +52,7 @@ public class DataSourceContextHolder {
             context.getBean(MetaDataService.class).getTableNames();
         } catch(Exception e) {
             resolvedDataSources.remove(info.getDataSourceName());
-            switchToDefault();
+            switchTo(DEFAULT_DATA_SOURCE_NAME);
             throw new DataSourceInfoException("Cannot connect to: \"%s\" with info - %s. Message - %s".formatted(url, info, e.getMessage()));
         }
     }
@@ -65,7 +66,16 @@ public class DataSourceContextHolder {
         return currentDataSourceName;
     }
 
-    public void switchToDefault() {
-        currentDataSourceName = DEFAULT_DATA_SOURCE_NAME;
+    public List<String> getDataSourceNames() {
+        return resolvedDataSources.keySet()
+                .stream()
+                .map(o -> ((String) o))
+                .toList();
+    }
+
+    public void switchTo(String dataSourceName) {
+        if (resolvedDataSources.get(dataSourceName) == null)
+            throw new DataSourceInfoException("DataSource with name - %s not found".formatted(dataSourceName));
+        currentDataSourceName = dataSourceName;
     }
 }

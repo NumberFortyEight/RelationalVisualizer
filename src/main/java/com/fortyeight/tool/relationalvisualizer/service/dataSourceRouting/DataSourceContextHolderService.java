@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -18,7 +20,11 @@ public class DataSourceContextHolderService {
         dataSourceContextHolder.set(simpleDataSourceInfo);
     }
 
-    public void switchToDefault() {
-        dataSourceContextHolder.switchToDefault();
+    public List<String> getDataSourceNames() {
+        return dataSourceContextHolder.getDataSourceNames();
+    }
+
+    public void switchTo(String dataSourceName) {
+        dataSourceContextHolder.switchTo(dataSourceName);
     }
 }
