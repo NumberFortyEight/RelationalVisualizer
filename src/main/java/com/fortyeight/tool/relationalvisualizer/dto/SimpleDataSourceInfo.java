@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -20,8 +21,8 @@ public class SimpleDataSourceInfo {
     @NotEmpty
     private String host;
 
-    @NotEmpty
-    private int portNumber;
+    @NotNull
+    private Integer portNumber;
 
     @NotEmpty
     private String databaseName;

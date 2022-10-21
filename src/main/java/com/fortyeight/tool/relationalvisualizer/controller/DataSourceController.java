@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class DataSourceController {
     private final DataSourceContextHolderService dataSourceContextHolderService;
 
     @PostMapping
-    public SimpleDataSourceInfo save(@RequestBody SimpleDataSourceInfo simpleDataSourceInfo) {
+    public SimpleDataSourceInfo save(@RequestBody @Valid SimpleDataSourceInfo simpleDataSourceInfo) {
         dataSourceContextHolderService.set(simpleDataSourceInfo);
         return simpleDataSourceInfo;
     }
