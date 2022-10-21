@@ -28,9 +28,4 @@ public class ExternalBootstrapDataSourceConfig {
         String url = dataSourceUrlFormatter.formatDataSourceUrl(info);
         return extractor.getDataSource(info, url);
     }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate(@Qualifier("bootstrapDataSource") DataSource bootstrapDataSource) {
-        return new JdbcTemplate(bootstrapDataSource);
-    }
 }
