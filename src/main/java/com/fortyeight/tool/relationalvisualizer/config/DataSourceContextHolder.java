@@ -16,7 +16,6 @@ import java.util.Map;
 public class DataSourceContextHolder {
 
     private static final String DATA_SOURCE_URL_TEMPLATE = "jdbc:%s://%s:%s/%s";
-    private final DefaultListableBeanFactory beanFactory;
 
     private String currentDataSourceBeanNameContext;
     @Setter
@@ -35,7 +34,6 @@ public class DataSourceContextHolder {
                 .url(formatDataSourceUrl(info))
                 .build();
         String dataSourceName = info.getDataSourceName();
-        beanFactory.registerSingleton(dataSourceName, dataSource);
         resolvedDataSources.put(dataSourceName, dataSource);
         currentDataSourceBeanNameContext = dataSourceName;
     }

@@ -1,14 +1,11 @@
 package com.fortyeight.tool.relationalvisualizer.config;
 
 import com.fortyeight.tool.relationalvisualizer.service.ResolvedDataSourceExtractorService;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Field;
 import java.util.Map;
 
 @Component
@@ -17,10 +14,12 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     private final ResolvedDataSourceExtractorService resolvedDataSourceExtractorService;
 
     public DataSourceRouter(DataSourceContextHolder dataSourceContextHolder,
-                            ResolvedDataSourceExtractorService resolvedDataSourceExtractorService) {
+                            ResolvedDataSourceExtractorService resolvedDataSourceExtractorService,
+                            @Qualifier("defaultEmbeddedDataSourceMap")
+                            Map<Object, Object> defaultDataSourceMap) {
         this.dataSourceContextHolder = dataSourceContextHolder;
         this.resolvedDataSourceExtractorService = resolvedDataSourceExtractorService;
-        super.setTargetDataSources(Map.of("defaultEmbeddedDataSource", defaultEmbeddedDataSource()));
+        super.setTargetDataSources(defaultDataSourceMap);
     }
 
     @Override
@@ -34,12 +33,5 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         return dataSourceContextHolder.getCurrentDataSourceBeanName();
-    }
-
-    private DataSource defaultEmbeddedDataSource() {
-        EmbeddedDatabaseBuilder dbBuilder = new EmbeddedDatabaseBuilder();
-        return dbBuilder.setType(EmbeddedDatabaseType.H2)
-                .setName("defaultEmbeddedDataSource")
-                .build();
     }
 }
