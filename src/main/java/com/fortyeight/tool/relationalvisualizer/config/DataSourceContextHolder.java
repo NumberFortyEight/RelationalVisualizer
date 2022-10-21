@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 
 @Service
 @RequiredArgsConstructor
-public class DatabaseContextHolder {
+public class DataSourceContextHolder {
 
     private static final String DATA_SOURCE_URL_TEMPLATE = "jdbc:%s://%s:%s/%s";
     private final DefaultListableBeanFactory beanFactory;
@@ -23,6 +23,7 @@ public class DatabaseContextHolder {
     }
 
     public void set(SimpleDataSourceInfo info) {
+        // TODO: 21.10.2022 validation required
         DataSource dataSource = DataSourceBuilder.create()
                 .username(info.getUser())
                 .password(info.getPassword())

@@ -10,16 +10,16 @@ import java.util.Map;
 
 @Component
 public class DataSourceRouter extends AbstractRoutingDataSource {
-    private final DatabaseContextHolder databaseContextHolder;
+    private final DataSourceContextHolder dataSourceContextHolder;
 
-    public DataSourceRouter(DatabaseContextHolder databaseContextHolder) {
-        this.databaseContextHolder = databaseContextHolder;
+    public DataSourceRouter(DataSourceContextHolder dataSourceContextHolder) {
+        this.dataSourceContextHolder = dataSourceContextHolder;
         super.setTargetDataSources(Map.of("defaultEmbeddedDataSource", defaultEmbeddedDataSource()));
     }
 
     @Override
     protected Object determineCurrentLookupKey() {
-        return databaseContextHolder.getCurrentDataSourceBeanName();
+        return dataSourceContextHolder.getCurrentDataSourceBeanName();
     }
 
     private DataSource defaultEmbeddedDataSource() {
