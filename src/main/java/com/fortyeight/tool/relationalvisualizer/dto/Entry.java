@@ -1,5 +1,6 @@
 package com.fortyeight.tool.relationalvisualizer.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Entry {
     private String table;
 
