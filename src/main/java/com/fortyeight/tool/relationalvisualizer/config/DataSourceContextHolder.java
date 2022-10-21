@@ -1,9 +1,9 @@
 package com.fortyeight.tool.relationalvisualizer.config;
 
 import com.fortyeight.tool.relationalvisualizer.dto.SimpleDataSourceInfo;
+import com.fortyeight.tool.relationalvisualizer.service.DataSourceUrlFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class DataSourceContextHolder {
-
-    private static final String DATA_SOURCE_URL_TEMPLATE = "jdbc:%s://%s:%s/%s";
+    private final DataSourceUrlFormatter dataSourceUrlFormatter;
+    public static final String DEFAULT_DATA_SOURCE_BEAN_NAME_CONTEXT = "defaultEmbeddedDataSource";
 
     private String currentDataSourceBeanNameContext;
     @Setter
@@ -23,26 +23,19 @@ public class DataSourceContextHolder {
 
     @PostConstruct
     private void init() {
-        currentDataSourceBeanNameContext = "defaultEmbeddedDataSource";
+        currentDataSourceBeanNameContext = DEFAULT_DATA_SOURCE_BEAN_NAME_CONTEXT;
     }
 
     public void set(SimpleDataSourceInfo info) {
-        // TODO: 21.10.2022 validation required
+        String url = dataSourceUrlFormatter.formatDataSourceUrl(info);
         DataSource dataSource = DataSourceBuilder.create()
                 .username(info.getUser())
                 .password(info.getPassword())
-                .url(formatDataSourceUrl(info))
+                .url(url)
                 .build();
         String dataSourceName = info.getDataSourceName();
         resolvedDataSources.put(dataSourceName, dataSource);
         currentDataSourceBeanNameContext = dataSourceName;
-    }
-
-    private String formatDataSourceUrl(SimpleDataSourceInfo info) {
-        return DATA_SOURCE_URL_TEMPLATE.formatted(info.getServerName(),
-                info.getHost(),
-                info.getPortNumber(),
-                info.getDatabaseName());
     }
 
     public Object getCurrentDataSourceBeanName() {
