@@ -1,32 +1,30 @@
 package com.fortyeight.tool.relationalvisualizer.service;
 
-import com.fortyeight.tool.relationalvisualizer.advice.exception.EntryPresentationException;
 import com.fortyeight.tool.relationalvisualizer.dto.Entry;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Slf4j
 public class EntryRowMapper implements RowMapper<Entry> {
-    private final JdbcTemplate template;
     private final String table;
     private final String idColumnName;
-    private final List<String> referenceColumnNames;
+    private final Map<String, String> referenceColumnNameToTable;
 
     private List<String> columnNames;
 
-    public EntryRowMapper(String table, JdbcTemplate template) {
+    public EntryRowMapper(String table, MetaDataService metaDataService) {
         this.table = table;
-        this.template = template;
-        this.referenceColumnNames = getReferenceColumnNames();
-        this.idColumnName = getIdColumnName();
+        this.idColumnName = metaDataService.getIdColumnName(table);
+        this.referenceColumnNameToTable = metaDataService.getReferenceColumnToTable(table);
     }
 
     @Override
@@ -41,37 +39,10 @@ public class EntryRowMapper implements RowMapper<Entry> {
 
     private List<String> getValues(ResultSet resultSet) throws SQLException {
         List<String> values = new ArrayList<>();
-        for (String columnName : columnNames) {
+        for (String columnName : columnNames)
             values.add(resultSet.getString(columnName));
-        }
+
         return values;
-    }
-
-    @SneakyThrows
-    private String getIdColumnName() {
-        try (Connection connection = Objects.requireNonNull(template.getDataSource()).getConnection()) {
-            DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet resultSet = databaseMetaData.getExportedKeys(null, null, table);
-            resultSet.next();
-            return resultSet.getString("PKCOLUMN_NAME");
-        } catch (Exception e) {
-            throw new EntryPresentationException("cannot get id column");
-        }
-    }
-
-    @SneakyThrows
-    private List<String> getReferenceColumnNames() {
-        List<String> referenceColumns = new ArrayList<>();
-        try (Connection connection = Objects.requireNonNull(template.getDataSource()).getConnection()) {
-            DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet resultSet = databaseMetaData.getImportedKeys(null, null, table);
-            while (resultSet.next()) {
-                referenceColumns.add(resultSet.getString(8));
-            }
-        } catch (Exception e) {
-            throw new EntryPresentationException("cannot get reference column");
-        }
-        return referenceColumns;
     }
 
     @SneakyThrows
@@ -93,17 +64,21 @@ public class EntryRowMapper implements RowMapper<Entry> {
             String value = values.get(i);
             if (value == null) continue;
             columnToValue.put(column, value);
-            if (referenceColumnNames.contains(column))
-                refToId.put(column, value);
+            if (referenceColumnNameToTable.containsKey(column))
+                refToId.put(referenceColumnNameToTable.get(column), value);
             if (idColumnName.equals(column))
                 id = value;
         }
 
-        return Entry.builder()
-                .table(table)
-                .id(id)
-                .fields(columnToValue)
-                .referenceTableToId(refToId)
-                .build();
+        Entry entry = new Entry();
+        entry.setTable(table);
+        entry.setId(id);
+        if (!columnToValue.isEmpty())
+            entry.setFields(columnToValue);
+
+        if (!refToId.isEmpty())
+            entry.setReferenceTableToId(refToId);
+
+        return entry;
     }
 }

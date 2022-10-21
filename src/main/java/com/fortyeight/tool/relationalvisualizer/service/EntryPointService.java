@@ -13,8 +13,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EntryPointService {
     private final JdbcTemplate template;
+    private final MetaDataService metaDataService;
 
     public List<Entry> getByTable(String table) {
-        return template.query("select * from " + table, new EntryRowMapper(table, template));
+        return template.query("select * from " + table, new EntryRowMapper(table, metaDataService));
     }
 }

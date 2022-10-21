@@ -1,12 +1,14 @@
 package com.fortyeight.tool.relationalvisualizer.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.Map;
 
 @Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Entry {
     private String table;
 
